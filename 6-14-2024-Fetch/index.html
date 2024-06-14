@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body class="container">
+    <div id="app">
+      <header>
+        <h1 id="title">Expense Tracker</h1>
+        <input
+          id="search-bar"
+          v-model="search_input"
+          type="text"
+          placeholder="Search..."
+        />
+        <button id="clear-search" @click="clear_search()">x</button>
+      </header>
+
+      <div class="expense-divider table-header">
+        <div>Desciption</div>
+        <div @click="sort_expenses()" class="no-select">
+          Amount
+          <span v-if="sort_order == 'asc'">&and;</span>
+          <span v-else>&or;</span>
+        </div>
+        <div>Category</div>
+      </div>
+      <div class="expense-divider" v-for="(ex, indx) in filtered_expenses">
+        <p>{{ex.description}}</p>
+        <p v-bind:style="[ex.amount >= 0 ? {color: '#0f0'} : {color: '#f00'}]">
+          {{ex.amount}}
+        </p>
+        <p>{{ex.category}}</p>
+        <button @click="delete_expense(indx)">Delete</button>
+        <button @click="edit_expense(indx)">Edit</button>
+      </div>
+      <div class="expense-divider table-footer">
+        <div>TOTAL</div>
+        <div>{{balance}}</div>
+      </div>
+
+      <div id="add-container">
+        <h2>Add Expense</h2>
+        <div id="add-form">
+          <label class="label-input">
+            <span>Description</span>
+            <input
+              type="text"
+              class="form-input"
+              v-model="add_description_input"
+            />
+          </label>
+          <label class="label-input">
+            <span>Amount</span>
+            <input
+              type="number"
+              class="form-input"
+              v-model="add_amount_input"
+            />
+          </label>
+          <label class="label-input">
+            <span>Category</span>
+            <input
+              type="text"
+              class="form-input"
+              v-model="add_category_input"
+            />
+          </label>
+          <button @click="add_expense()">Add New</button>
+        </div>
+      </div>
+
+      <footer></footer>
+
+      <div id="mtmp" v-if="editing">
+        <p>Description</p>
+        <input type="text" v-model="editing_expense.description" />
+        <p>Amount</p>
+        <input type="number" v-model="editing_expense.amount" />
+        <p>Category</p>
+        <input type="text" v-model="editing_expense.category" />
+        <button @click="save_expense()">Save</button>
+      </div>
+      <button @click="editing = false" id="close-edit" v-if="editing">X</button>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
